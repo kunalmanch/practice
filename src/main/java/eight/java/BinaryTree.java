@@ -1,7 +1,5 @@
 package eight.java;
 
-import sun.reflect.generics.tree.Tree;
-
 import java.util.*;
 
 /**
@@ -44,11 +42,6 @@ public class BinaryTree {
 
     static int diameter(TreeNode treeNode) {
         if (treeNode == null) return 0;
-        /**
-         * This code can be optimized to run in O(n)
-         * by calculating height in the same recursion.
-         * hieght = max(lh, rh) + 1 where lh and rh = 0 for treeNode == null.
-         */
 
         int lHeight = height(treeNode.left);
         int rHeight = height(treeNode.right);
@@ -64,6 +57,7 @@ public class BinaryTree {
         Queue<TreeNode> queue = new ArrayDeque<>();
         queue.add(treeNode);
         int currLevel = 1, nextLevel = 0;
+        int levelAt = 1;
         while (!queue.isEmpty()) {
             TreeNode treeNodeItr = queue.poll();
             System.err.print(treeNodeItr.val + " ");
@@ -77,6 +71,7 @@ public class BinaryTree {
             }
             if (--currLevel == 0) {
                 System.err.println("");
+                System.err.println("Finished level : " + levelAt++);
                 currLevel = nextLevel;
                 nextLevel = 0;
             }

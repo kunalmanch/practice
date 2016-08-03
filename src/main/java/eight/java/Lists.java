@@ -1,5 +1,7 @@
 package eight.java;
 
+import java.util.List;
+
 /**
  * Created by kmishra on 4/26/2016.
  */
@@ -168,6 +170,14 @@ public class Lists {
         }
 
         return prev;
+    }
+
+    public static ListNode recReverse(ListNode prev, ListNode curr) {
+        if (curr == null) return prev;
+        ListNode next = curr.next;
+        curr.next = prev;
+        prev = curr;
+        return recReverse(prev, next);
     }
 
     static ListNode reverseBetween(ListNode head, int m, int n) {
@@ -348,6 +358,9 @@ public class Lists {
         ln2.next.next = new ListNode(2);
         ln2.next.next.next = new ListNode(3);
         ln2.next.next.next.next = new ListNode(3);
-        ListNode dup = deleteDuplicatesII(ln2);
+//        ListNode dup = deleteDuplicatesII(ln2);
+        ListNode revLn2 = recReverse(null, ln2);
+        System.err.println("");
+
     }
 }

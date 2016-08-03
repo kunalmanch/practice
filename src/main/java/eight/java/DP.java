@@ -48,7 +48,7 @@ public class DP {
                 if (s1.charAt(i - 1) == s2.charAt(j - 1)) {
                     l[i][j] = 1 + l[i - 1][j - 1];
                 } else {
-                    l[i][j] = Math.max(l[i-1][j], l[i][j - 1]);
+                    l[i][j] = Math.max(l[i - 1][j], l[i][j - 1]);
                 }
             }
         }
@@ -692,8 +692,8 @@ public class DP {
         dp[0][0] = 0;
         for (int i = 1; i <= W; i++) {
             for (int j = 1; j <= val.length; j++) {
-                if (w[j - 1] <= W) {
-                    dp[i][j] = Math.max(dp[i][j], val[j - 1] + dp[W - w[j - 1]][j - 1]);
+                if (w[j - 1] <= i) {
+                    dp[i][j] = Math.max(dp[i][j], val[j - 1] + dp[i - w[j - 1]][j - 1]);
                 } else {
                     dp[i][j] = dp[i][j - 1];
                 }
@@ -722,6 +722,7 @@ public class DP {
             this.b = b;
         }
     }
+
     static int maximumLengthPairs(Pair[] pairs) {
         int[] dp = new int[pairs.length];
         dp[0] = 1;
@@ -871,6 +872,48 @@ public class DP {
         }
 
         return pos[s.length()] != -1;
+    }
+
+    /**
+     * WordBreak II
+     */
+    public static List<String> wordBreakII(String s, Set<String> wordDict) {
+        ArrayList<String> [] pos = new ArrayList[s.length()+1];
+        pos[0] = null;
+
+        for(int i = 0; i < s.length(); i++) {
+            if(pos[i] != null){
+                for(int j = i + 1; j <= s.length(); j++){
+                    String sub = s.substring(i,j);
+                    if (wordDict.contains(sub)){
+                        if (pos[j] == null){
+                            ArrayList<String> list = new ArrayList<>();
+                            pos[j] = list;
+                        }
+                        pos[j].add(sub);
+                    }
+                }
+            }
+        }
+
+        ArrayList<String> result = new ArrayList<>();
+        if (pos[s.length()] != null) {
+            dfs(pos, result, "", s.length());
+            return result;
+        }
+        return result;
+    }
+
+    public static void dfs(ArrayList<String> [] pos, ArrayList<String> result, String curr, int i){
+        if (i == 0) {
+            result.add(curr.trim());
+            return;
+        }
+
+        for (String s : pos[i]) {
+            String combined = s + " " + curr;
+            dfs(pos, result, combined, i - s.length());
+        }
     }
 
     static int minCutsPalindromePartitioning(String s) {
@@ -1149,5 +1192,12 @@ public class DP {
         System.err.println(isInterleave("aabcc", "dbbca", "aadbbbaccc"));
         int prices[] = {2, 30, 15, 10, 8, 25, 80};
         System.err.println(maxProfit2Stocks(prices));
+        Set<String> set = new HashSet<>();
+        set.add("leet");set.add("code");
+        System.err.println(wordBreak("leetcode", set));
+        set.clear();
+        set.add("cat"); set.add("cats"); set.add("and"); set.add("sand"); set.add("dog");
+        List<String> list = wordBreakII("catsanddog", set);
+        System.err.println("");
     }
 }

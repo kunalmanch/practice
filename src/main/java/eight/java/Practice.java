@@ -263,6 +263,196 @@ public class Practice {
         return helper.next;
     }
 
+    static List<List<Integer>> pascalsTriangle(int n) {
+        List<List<Integer>> result = new ArrayList<>();
+        List<Integer> pre = new ArrayList<>();
+        int k = 0;
+        while (k < n) {
+            List<Integer> curr = new ArrayList<>();
+            curr.add(1);
+            for (int i = 0; i < pre.size() - 1; i++) {
+                curr.add(pre.get(i) + pre.get(i + 1));
+            }
+            if (k != 0) curr.add(1);
+            pre = curr;
+            result.add(pre);
+            k++;
+        }
+        return result;
+    }
+
+    static int findMinRotated2(int[] a) {
+        int lo = 0;
+        int hi = a.length - 1;
+
+        while (lo <= hi) {
+            if (lo == hi) return a[lo];
+            if (hi - lo == 1) return a[lo] < a[hi] ? lo : hi;
+
+            if (a[lo] < a[hi]) return a[lo];
+
+            int mid = lo + ((hi - lo) >> 1);
+
+            if (a[mid] > a[hi]) lo = mid;
+            else hi = mid;
+        }
+        return a[0];
+    }
+
+    static int findMaxRotated2(int[] a) {
+        int lo = 0;
+        int hi = a.length - 1;
+
+        while (lo <= hi) {
+            if (lo == hi) return a[lo];
+            if (hi - lo == 1) return a[lo] > a[hi] ? lo : hi;
+
+            if (a[lo] < a[hi]) return a[hi];
+
+            int mid = lo + ((hi - lo) >> 1);
+
+            if (a[mid] > a[hi]) lo = mid;
+            else hi = mid;
+        }
+        return a[0];
+    }
+
+    static int findMaxIncDec(int a[]) {
+        int lo = 0, hi = a.length - 1;
+        while (lo <= hi) {
+            if (lo == hi - 1) return a[lo] > a[hi] ? a[lo] : a[hi];
+
+            int mid = lo + ((hi - lo) >> 1);
+
+            if (a[mid] > a[mid - 1] && a[mid] > a[mid + 1]) return a[mid];
+
+            if (a[mid - 1] < a[mid] && a[mid] < a[mid + 1]) lo = mid + 1;
+            else hi = mid - 1;
+        }
+        return -1;
+    }
+
+
+    static int binarySearchInRotatedArray(int[] a, int num) {
+        int pivot = findMaxRotated2(a);
+        int bs = binarySearch(a, num, 0, pivot);
+        if (bs != -1) return bs;
+        else return binarySearch(a, num, pivot + 1, a.length - 1);
+    }
+
+    static int binarySearch(int[] a, int num, int lo, int hi) {
+        if (lo > hi) return -1;
+        int mid = lo + ((hi - lo) >> 1);
+
+        if (a[mid] == num) return mid;
+
+        if (a[mid] < num) return binarySearch(a, num, mid + 1, hi);
+        return binarySearch(a, num, lo, mid - 1);
+    }
+
+    static int ones(int n) {
+        int count = 0;
+        while (n > 0) {
+            n &= (n-1);
+            count++;
+        }
+        return count;
+    }
+
+    static void preInToPost(int[] in, int[] pre, int[] post, int preIdx, int postIdx, int lo, int hi) {
+        if (preIdx >= pre.length) return;
+        int key = pre[preIdx];
+        int i;
+        for (i = lo; i <= hi; i++) {
+            if (in[i] == key) break;
+        }
+        preIdx++;
+        preInToPost(in, pre, post, preIdx, postIdx, lo, i - 1);
+        preInToPost(in, pre, post, preIdx, postIdx, i + 1, hi);
+        post[postIdx++] = key;
+    }
+
+    static BinaryTree.TreeNode bstFromPre(int[] pre, int idx, int key, int min, int max) {
+        if (idx > pre.length - 1) return null;
+        BinaryTree.TreeNode treeNode = null;
+        if (min < key && key < max) {
+            treeNode = new BinaryTree.TreeNode(key);
+            idx++;
+            if (idx < pre.length) {
+                treeNode.left = bstFromPre(pre, idx, pre[idx], min, key);
+                treeNode.right = bstFromPre(pre, idx, pre[idx], key, max);
+            }
+
+        }
+        return treeNode;
+    }
+
+    static void swap(int a, int b) {//5,3
+        a = a + b;//5 + 3 = 8
+        b = a - b;//8 - 3 = 5
+        a = a - b;//8 - 5 = 3
+
+    }
+
+    static int countPrimes(int n) {
+        boolean[] primes = new boolean[n + 1];
+
+//        if (n == 2) return 1;
+//        if (n == 3) return 2;
+
+        Arrays.fill(primes, true);
+
+        for (int p = 2; p * p <= n; p++) {
+            if (primes[p]) {
+                for (int i = p * 2; i <= n; i += p) {
+                    primes[i] = false;
+                }
+            }
+        }
+
+        int count = 0;
+        for (int i = 2; i <= n; i++) {
+            if (primes[i]) count++;
+        }
+        return count;
+    }
+
+    static void bstToDLL(BinaryTree.TreeNode root, BinaryTree.TreeNode head, BinaryTree.TreeNode prev) {
+        if (root == null) return;
+
+        bstToDLL(root.left, head, prev);
+
+        if (prev == null) {
+            head = root;
+        } else {
+            prev.right = root;
+            root.left = prev;
+        }
+        prev = root;
+
+        bstToDLL(root.right, head, prev);
+    }
+
+    static int lcs(String s1, String s2) {
+        int[][] dp = new int[s1.length() + 1][s2.length() + 1];
+
+        for (int i = 1; i <= s1.length(); i++) {
+            for (int j = 1; j <= s2.length(); j++) {
+                if (s1.charAt(i - 1) == s2.charAt(j - 1)) {
+                    dp[i][j] = 1 + dp[i - 1][j - 1];
+                } else {
+                    dp[i][j] = Math.max(dp[i][j - 1], dp[i - 1][j]);
+                }
+            }
+        }
+        return dp[s1.length()][s2.length()];
+    }
+
+    /**
+     * Intuitive algorithm to understand
+     */
+
+
     public static void main(String[] args) {
         String secret = "1807";
         String guess = "7810";
@@ -309,5 +499,16 @@ public class Practice {
             head = head.next;
         }
         System.err.println("");
+
+        List<List<Integer>> result = pascalsTriangle(5);
+        System.err.println("");
+        int[] incdec = {0,1,2,3,4,10,9,8};
+        System.err.println(findMaxIncDec(incdec));
+        int rot[] = {14,15,16,17,18,20,-1,0,1,2,3,4,5};
+        System.err.println(binarySearchInRotatedArray(rot, 4));
+        System.err.println(ones(6));
+        System.err.println(countPrimes(4));
+        System.err.println(rot[findMinRotated2(rot)]);
+        System.err.println(rot[findMaxRotated2(rot)]);
     }
 }
