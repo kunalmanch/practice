@@ -448,10 +448,37 @@ public class Practice {
         return dp[s1.length()][s2.length()];
     }
 
-    /**
-     * Intuitive algorithm to understand
-     */
+    static int localMinima(int[] a) {
+        int lo = 0, hi = a.length - 1;
+        while (lo <= hi) {
+            if (lo == hi) return a[lo];
+            if (lo - hi == 1) return Math.min(a[lo], a[hi]);
 
+            int mid = lo + ((hi - lo) >> 1);
+
+            if (a[mid] < a[mid - 1] && a[mid] < a[mid + 1]) return a[mid];
+
+            if (a[mid] > a[mid - 1]) hi = mid - 1;
+            else lo = mid + 1;
+        }
+        return -1;
+    }
+
+    static int localMaxima(int[] a) {
+        int lo = 0, hi = a.length - 1;
+        while (lo <= hi) {
+            if (lo == hi) return a[lo];
+            if (lo - hi == 1) return Math.max(a[lo], a[hi]);
+
+            int mid = lo + ((hi - lo) >> 1);
+
+            if (a[mid] > a[mid - 1] && a[mid] > a[mid + 1]) return a[mid];
+
+            if (a[mid] < a[mid - 1]) hi = mid - 1;
+            else lo = mid + 1;
+        }
+        return -1;
+    }
 
     public static void main(String[] args) {
         String secret = "1807";
@@ -504,11 +531,17 @@ public class Practice {
         System.err.println("");
         int[] incdec = {0,1,2,3,4,10,9,8};
         System.err.println(findMaxIncDec(incdec));
-        int rot[] = {14,15,16,17,18,20,-1,0,1,2,3,4,5};
+        int rot[] = {14,15,16,17,18,20,-2,0,1,2,3,4,5};
         System.err.println(binarySearchInRotatedArray(rot, 4));
         System.err.println(ones(6));
         System.err.println(countPrimes(4));
         System.err.println(rot[findMinRotated2(rot)]);
         System.err.println(rot[findMaxRotated2(rot)]);
+        System.err.println(localMinima(incdec));
+        System.err.println(localMinima(rot));
+        System.err.println(localMaxima(incdec));
+        System.err.println(localMaxima(rot));
     }
+
+
 }
