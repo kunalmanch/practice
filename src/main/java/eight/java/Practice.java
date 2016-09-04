@@ -45,22 +45,24 @@ public class Practice {
      * abba != cdda
      */
     static boolean isomorphic(String s1, String s2) {
-        if (s1.length() != s2.length()) return false;
+        if (s1 == null && s2 == null) return true;
+        if (s1 == null || s2 == null || s1.length() != s2.length()) return false;
 
-        HashMap<Character, Character> map = new HashMap<>();
-        Set<Character> mappedValues = new HashSet<>();
+        Map<Character, Character> map = new HashMap<>();
+        Set<Character> valueSet = new HashSet<>();
+
         for (int i = 0; i < s1.length(); i++) {
-            char s1char = s1.charAt(i);
-            char s2char = s2.charAt(i);
-            if (map.containsKey(s1char)) {
-                if (map.get(s1char) != s2char) return false;
+            char s1Char = s1.charAt(i);
+            char s2Char = s2.charAt(i);
+
+            if (map.containsKey(s1Char)) {
+                if (s2Char != map.get(s1Char)) return false;
             } else {
-                if (mappedValues.contains(s2char)) return false;
-                map.put(s1char, s2char);
-                mappedValues.add(s2char);
+                if (valueSet.contains(s2Char)) return false;
+                map.put(s1Char, s2Char);
+                valueSet.add(s2Char);
             }
         }
-
         return true;
     }
 
@@ -480,6 +482,151 @@ public class Practice {
         return -1;
     }
 
+    static int earliestDuplicate(int[] a) {
+        Set<Integer> set = new HashSet<>();
+        int min = a.length - 1;
+        for (int i = a.length - 1; i >= 0; i--) {
+            if (set.contains(a[i])) {
+                min = Math.min(i, min);
+            } else {
+                set.add(a[i]);
+            }
+        }
+        return a[min];
+    }
+
+    static int matrixCountPath(int[][] mat) {
+        int m = mat.length;
+        int n = mat[0].length;
+        int[][] dp = new int[m][n];
+
+        for (int i = 0; i < m; i++) dp[i][0] = 1;
+        for (int i = 0; i < n; i++) dp[0][i] = 1;
+
+        for (int i = 1; i < m; i++) {
+            for (int j = 1; j < n; j++) {
+                dp[i][j] = dp[i - 1][j] + dp[i][j - 1];
+            }
+        }
+        return dp[m - 1][n - 1];
+    }
+
+    static boolean binarySearchMatrix(int[][] mat, int t) {
+        int m = mat.length;
+        int n = mat[0].length;
+        int r = 0, c = n - 1;
+        while (r < m && c < n) {
+            if (t == mat[r][c]) return true;
+            if (t < mat[r][c]) c--;
+            else r++;
+        }
+        return false;
+    }
+
+    static void bstToPreorderList(BinaryTree.TreeNode root, BinaryTree.TreeNode prev, BinaryTree.TreeNode head) {
+        if (root == null) return;
+        if (prev == null) {
+            head = root;
+        } else {
+            root.left = prev;
+            prev.right = root;
+        }
+        prev = root;
+        bstToPreorderList(root.left, prev, head);
+        bstToPreorderList(root.right, prev, head);
+    }
+
+    static boolean compareBT(BinaryTree.TreeNode p, BinaryTree.TreeNode q) {
+        if (p == null && q == null) return true;
+        if (p == null || q == null) return false;
+
+        return p.val == q.val && compareBT(p.left, q.left) && compareBT(p.right, q.right);
+    }
+
+    static boolean isSymmetric(BinaryTree.TreeNode p, BinaryTree.TreeNode q) {
+        if (p == null && q == null) return true;
+        if (p == null || q == null) return false;
+
+        boolean b1 = isSymmetric(p.left, q.right);
+        boolean b2 = isSymmetric(p.right, q.left);
+
+        return p.val == q.val && b1 && b2;
+    }
+
+    static void partitionOddEven(int a[]) {
+        int i = 0;
+        for (int j = i; j < a.length; j++) {
+            if (a[j] % 2 == 0) {
+                Sorting.swap(a, i, j);
+                i++;
+            }
+        }
+        Sorting.swap(a, i, a.length - 1);
+    }
+
+    static boolean isBalanced(BinaryTree.TreeNode root) {
+        if (root == null) return true;
+        int lh = BinaryTree.height(root.left);
+        int rh = BinaryTree.height(root.right);
+
+        return Math.abs(lh - rh) <= 1 && isBalanced(root.left) && isBalanced(root.right);
+    }
+
+    static int countOccInSorted(int[] a, int n) {
+        int lo = 0, hi = a.length - 1;
+        int l = 0;
+        while (lo <= hi) {
+            if (lo == hi) {
+                l = lo;
+                break;
+            }
+            if (hi - lo == 1) {
+                if (a[lo] == n) l = lo;
+                else if (a[hi] == n) l = hi;
+                else throw new RuntimeException("number not in array");
+                break;
+            }
+
+            int mid = lo + ((hi - lo) >> 1);
+
+            if (a[mid] == n && a[mid -1] != n) {
+                l = mid;
+                break;
+            }
+
+            if (a[mid] == n) hi = mid;
+            else lo = mid + 1;
+        }
+
+        int r = l;
+        lo = l;
+        hi = a.length - 1;
+
+        while (lo <= hi) {
+            if (lo == hi) {
+                r = lo;
+                break;
+            }
+            if (hi - lo == 1) {
+                if (a[lo] == n) r = lo;
+                else if (a[hi] == n) r = hi;
+                break;
+            }
+
+            int mid = lo + ((hi - lo) >> 1);
+
+            if (a[mid] == n && a[mid + 1] != n) {
+                r = mid;
+                break;
+            }
+
+            if (a[mid] == n) lo = mid;
+            else hi = mid - 1;
+        }
+        return r - l + 1;
+
+    }
+
     public static void main(String[] args) {
         String secret = "1807";
         String guess = "7810";
@@ -492,9 +639,11 @@ public class Practice {
         System.err.println(bullsAndCows(secret, guess));
         System.err.println(2 >> 1);
         System.err.println(2 << 3);
+        System.err.println("================================");
         System.err.println(isomorphic("abba", "cddc"));
         System.err.println(isomorphic("abba", "cdda"));
         System.err.println(isomorphic("cbba", "cddc"));
+        System.err.println("================================");
         System.err.println(lengthOfLongestSubstring("abcdbcbb"));
         System.err.println(lengthOfLongestSubstring("pwwkew"));
         System.err.println(lengthOfLongestSubstring("bbb"));
@@ -541,6 +690,21 @@ public class Practice {
         System.err.println(localMinima(rot));
         System.err.println(localMaxima(incdec));
         System.err.println(localMaxima(rot));
+        int[] dup = {10,5,6,5,6,7};
+        System.err.println(earliestDuplicate(dup));
+        int[][] mat = {
+                {1,2,3},
+                {4,5,6},
+                {7,8,9}
+        };
+        System.err.println(matrixCountPath(mat));
+        System.err.println(binarySearchMatrix(mat, 6));
+        int[] arr = {1,2,3,4,5,6};
+        partitionOddEven(arr);
+        for (int i : arr) System.err.print(i + " ");
+        System.err.println("");
+        int[] srted = {1,2,3,3,3,3,3,4,5};
+        System.err.println(countOccInSorted(srted, 3));
     }
 
 

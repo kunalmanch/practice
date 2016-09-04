@@ -616,6 +616,33 @@ public class Misc {
         return result;
     }
 
+    static int wordDistance(String[] a, String s1, String s2) {
+        Map<String, List<Integer>> map = new HashMap<>();
+        for (int i = 0; i < a.length; i++) {
+            String s = a[i];
+            List<Integer> list;
+            if ((list = map.get(s)) == null) {
+                list = new ArrayList<>();
+                map.put(s, list);
+            }
+            list.add(i);
+        }
+
+        List<Integer> s1Idx = map.get(s1);
+        List<Integer> s2Idx = map.get(s2);
+
+        int i = 0, j = 0;
+        int dist = Integer.MAX_VALUE;
+        while (i < s1Idx.size() && j < s2Idx.size()) {
+            int iIdx = s1Idx.get(i);
+            int jIdx = s2Idx.get(j);
+            dist = Math.min(dist, Math.abs(iIdx - jIdx));
+            if (iIdx < jIdx) i++;
+            else j++;
+        }
+        return dist;
+    }
+
     public static void main(String[] args) {
 //        int a[] = {1,1,1,2,2,3,3,3};
 //        int i = removeDuplicatesII(a);
@@ -699,5 +726,8 @@ public class Misc {
         System.err.println(intToRoman(2014));
         System.err.println(romanToInt("MMXIV"));
         System.err.println(romanToInt("MCMIII"));
+
+        String[] sarr = {"practice", "makes", "perfect", "coding", "makes"};
+        System.err.println(wordDistance(sarr, "coding", "makes"));
     }
 }

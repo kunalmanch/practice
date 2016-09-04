@@ -27,7 +27,7 @@ public class DP {
                     p[i][j] = l == 2 ? 2 : p[i + 1][j - 1] + 2;
                     maxLen = Math.max(maxLen, p[i][j]);
                 } else {
-                    p[i][j] = Math.max(p[i + 1][j], p[i][j-1]);
+                    p[i][j] = Math.max(p[i + 1][j], p[i][j - 1]);
                 }
             }
         }
@@ -54,12 +54,6 @@ public class DP {
         }
         return l[s1.length()][s2.length()];
     }
-
-//    static int get(int[][] l, int x, int y) {
-//        if (x < 0) return 0;
-//        if (y < 0) return 0;
-//        return l[x][y];
-//    }
 
     /**
      * longest increasing sequence
@@ -194,10 +188,9 @@ public class DP {
 
         for (int i = 1; i <= target; i++) {
             for (int j = 1; j <= nums.length; j++) {
+                s[i][j] = s[i][j - 1];
                 if (nums[j - 1] <= i) {
                     s[i][j] = s[i][j] || s[i - nums[j - 1]][j - 1];
-                } else {
-                    s[i][j] = s[i][j - 1];
                 }
             }
         }
@@ -1090,7 +1083,7 @@ public class DP {
         System.err.println(isMatch("bba", "b.."));
         System.err.println(isMatch("bba", "bc*"));
         System.err.println(isMatch("a", "a*"));
-        System.err.println(uniquePaths(1,2));
+        System.err.println(uniquePaths(3,3));
         int[][] obstacleGrid = {
                 {0,0,0},
                 {0,1,0},

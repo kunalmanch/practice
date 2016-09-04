@@ -5,12 +5,12 @@ import java.util.ArrayList;
 /**
  * Created by kmishra on 5/6/2016.
  */
-public class Stack {
+public class MinMaxStack {
 
     private ArrayList<Integer> stack;
     private ArrayList<Integer> min, max;
 
-    public Stack() {
+    public MinMaxStack() {
         stack = new ArrayList<>();
         min = new ArrayList<>();
         max = new ArrayList<>();
@@ -49,22 +49,22 @@ public class Stack {
     }
 
     public static void main(String[] args) {
-        Stack stack = new Stack();
-        System.err.println(stack.pop());
-        System.err.println(stack.push(1));
-        System.err.println(stack.push(2));
-        System.err.println(stack.push(3));
-        System.err.println(stack.getMin());
-        System.err.println(stack.getMax());
-        System.err.println(stack.pop());
-        System.err.println(stack.getMin());
-        System.err.println(stack.getMax());
+        MinMaxStack minMaxStack = new MinMaxStack();
+        System.err.println(minMaxStack.pop());
+        System.err.println(minMaxStack.push(1));
+        System.err.println(minMaxStack.push(2));
+        System.err.println(minMaxStack.push(3));
+        System.err.println(minMaxStack.getMin());
+        System.err.println(minMaxStack.getMax());
+        System.err.println(minMaxStack.pop());
+        System.err.println(minMaxStack.getMin());
+        System.err.println(minMaxStack.getMax());
         System.err.println("====");
-        System.err.println(stack.push(4));
-        System.err.println(stack.getMin());
-        System.err.println(stack.getMax());
-        System.err.println(stack.push(-2));
-        System.err.println(stack.getMin());
-        System.err.println(stack.getMax());
+        System.err.println(minMaxStack.push(4));
+        System.err.println(minMaxStack.getMin());
+        System.err.println(minMaxStack.getMax());
+        System.err.println(minMaxStack.push(-2));
+        System.err.println(minMaxStack.getMin());
+        System.err.println(minMaxStack.getMax());
     }
 }

@@ -56,6 +56,19 @@ public class Sorting {
         }
     }
 
+    static void bubbleSort(int nums[]) {
+        boolean flag = true;
+        while (flag) {
+            flag = false;
+            for (int i = 0; i < nums.length - 1; i++) {
+                if (nums[i] > nums[i + 1]) {
+                    swap(nums, i, i + 1);
+                    flag = true;
+                }
+            }
+        }
+    }
+
     public static int kLargest(int[] a, int k) {
         return quickSelect(a, 0, a.length - 1, k - 1);
     }
@@ -84,7 +97,7 @@ public class Sorting {
         return i;
     }
 
-    private static void swap(int[] a, int i, int j) {
+    static void swap(int[] a, int i, int j) {
         int temp = a[i];
         a[i] = a[j];
         a[j] = temp;
@@ -123,6 +136,78 @@ public class Sorting {
         }
     }
 
+    static void mergeSortStrings(String[] strings, String[] tmp, int lo, int hi) {
+        if (lo >= hi) return;
+        int mid = lo + ((hi - lo) >> 1);
+        mergeSortStrings(strings, tmp, lo, mid);
+        mergeSortStrings(strings, tmp, mid + 1, hi);
+        mergeStrings(strings, tmp, lo, mid, hi);
+    }
+
+    static void mergeStrings(String[] a, String[] tmp, int lo, int mid, int hi) {
+        if (lo >= hi) return;
+        int i = lo;
+        int j = mid + 1;
+        int k = lo;
+        while (i <= mid && j <= hi) {
+            if (strCompare(a[i], a[j]) == -1) {
+                tmp[k] = a[i++];
+            } else {
+                tmp[k] = a[j++];
+            }
+            k++;
+        }
+
+        while (i <= mid) {
+            tmp[k++] = a[i++];
+        }
+
+        while (j <= hi) {
+            tmp[k++] = a[j++];
+        }
+
+        for (i = lo; i <= hi; i++) {
+            a[i] = tmp[i];
+        }
+    }
+
+    static void quickSortString(String[] a, int lo, int hi) {
+        if (lo >= hi) return;
+        int pivot = stringPartition(a, lo, hi);
+        quickSortString(a, lo, pivot - 1);
+        quickSortString(a, pivot + 1, hi);
+    }
+
+    private static int stringPartition(String[] a, int lo, int hi) {
+        for (int j = lo; j <= hi; j++) {
+            if (strCompare(a[j], a[hi]) == -1) {
+                swap(a, lo, j);
+                lo++;
+            }
+        }
+        swap(a, lo, hi);
+        return lo;
+    }
+
+    static void swap(String[] a, int i, int j) {
+        String temp = a[i];
+        a[i] = a[j];
+        a[j] = temp;
+    }
+
+    private static int strCompare(String s1, String s2) {
+        int i = 0, j = 0;
+        while (i < s1.length() && j < s2.length()) {
+            char s1Char = s1.charAt(i++);
+            char s2Char = s2.charAt(j++);
+            if (s1Char < s2Char) return -1;
+            if (s1Char > s2Char) return 1;
+        }
+
+        if (s1.length() == s2.length()) return 0;
+        return s1.length() > s2.length() ? 1 : -1;
+    }
+
     public static void main(String[] args) {
         int nums[] = {1,5,2,4,3,7,6};
 //        partition(nums, 0, nums.length - 1);
@@ -135,5 +220,12 @@ public class Sorting {
         for (int i : nums) System.err.print(i + " ");
         System.err.println("");
         System.err.println(kLargest(nums, 3));
+
+        String[] sarr = {"abc", "ab", "abcd", "a"};
+        String[] tmpS = {"abc", "ab", "abcd", "a"};
+//        mergeSortStrings(sarr, tmpS, 0, sarr.length - 1);
+        quickSortString(sarr, 0, sarr.length - 1);
+        for (String s : sarr) System.err.println(s);
+        System.err.println(strCompare("a", "abc"));
     }
 }

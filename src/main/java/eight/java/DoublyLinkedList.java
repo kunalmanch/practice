@@ -19,40 +19,44 @@ public class DoublyLinkedList {
 
     public void addFirst(int val) {
         DoublyListNode newNode = new DoublyListNode(val);
-        boolean updateLast = head == null;
         if (head != null) {
             newNode.next = head;
             head.prev = newNode;
         }
         head = newNode;
-        if (updateLast) last = head;
-    }
-
-    public void remove(DoublyListNode node) {
-        if (head == null || node == null) return;
-        if (node.prev != null) {
-            node.prev.next = node.next;
-        } else {
-            head = node.next; //head == node;
-        }
-        if (node.next != null) node.next.prev = node.prev;
+        if (last == null) last = head;
     }
 
     public void addLast(int val) {
-        /*DoublyListNode itr = head;
-        while (itr.next != null) {
-            itr = itr.next;
-        }
-        itr.next = new DoublyListNode(val);
-        itr.next.prev = itr;*/
         DoublyListNode newNode = new DoublyListNode(val);
         if (last != null) {
             last.next = newNode;
             newNode.prev = last;
-        } else {
-            last = newNode;
         }
-        last = last.next;
+        last = newNode;
+    }
+
+    public void remove(DoublyListNode node) {
+        if (node.prev != null) node.prev.next = node.next;
+        if (node.next != null) node.next.prev = node.prev;
+    }
+
+    public void removeHead() {
+        if (head.next == null) {
+            last = null;
+        } else {
+            head.next.prev = null;
+        }
+        head = head.next;
+    }
+
+    public void removeLast() {
+        if (head.next == null) {
+            head = null;
+        } else {
+            last.prev.next = null;
+        }
+        last = last.prev;
     }
 
     public void reverse() { //swap curr's prev and next.
@@ -71,6 +75,12 @@ public class DoublyLinkedList {
         }
     }
 
+    static void printReverse(DoublyListNode node) {
+        if (node == null) return;
+        printReverse(node.next);
+        System.err.println(node.val);
+    }
+
     public static void main(String[] args) {
         DoublyLinkedList ll = new DoublyLinkedList();
         ll.addFirst(3);
@@ -78,6 +88,6 @@ public class DoublyLinkedList {
         ll.addFirst(5);
         ll.addLast(6);
         ll.reverse();
-        System.err.println("");
+        printReverse(ll.head);
     }
 }

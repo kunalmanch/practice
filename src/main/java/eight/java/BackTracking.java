@@ -182,7 +182,7 @@ public class BackTracking {
         for (int i = 0; i < ar.length; i++) {
             sb.append(ar[i]);
             letterComboHelper(result, sb, idx + 1, map, digits);
-            sb.deleteCharAt(sb.length() - 1);
+            sb.deleteCharAt(sb.length() - 1);//backtracking
         }
     }
 
